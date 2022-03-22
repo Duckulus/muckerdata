@@ -11,6 +11,7 @@ import { sleep } from "./util.js";
 
 let token;
 let channelid;
+let limit;
 
 const intro = async () => {
     const welcomeText = chalkAnimation.karaoke("Discord Group Analyzer by Duckulus\n");
@@ -68,7 +69,7 @@ const channelPrompt = async () => {
         message: "Please enter the ID of the group (Group -> Rightclick -> Copy ID):",
     });
     channelid = channelResponse.channelid;
-    const spinner = createSpinner("Überprüfe...").start();
+    const spinner = createSpinner("Checking...").start();
     try {
         await axios.get(`https://discord.com/api/v9/channels/${channelid}`, {
             headers: {
@@ -85,17 +86,47 @@ const channelPrompt = async () => {
 
         await channelPrompt();
     }
+    await limitPromp();
+};
+
+const limitPromp = async () => {
+    const limitResponse = await inquirer.prompt({
+        name: "limit",
+        type: "input",
+        message: "Please enter the limit of messages to be fetched! (Enter -1 to fetch all messages)",
+    });
+    if (!Number.isInteger(Number(limitResponse.limit))) {
+        console.log(chalk.red("Invalid Value! Please enter a number!"));
+        await limitPromp();
+    }
+    limit = limitResponse.limit;
+
+    const fetchSpinner = createSpinner("Preparing...").start();
+    const messages = await fetchAllMessages(token, channelid, fetchSpinner, limit);
+    const channel = await fetchChannel(token, channelid);
+    const data = {};
+    data.messageCount = messages.length;
+    data.channel = channel;
+    data.messages = messages;
+    await printData(data);
+    await againPromt();
+};
+
+const againPromt = async () => {
+    const againResponse = await inquirer.prompt({
+        name: "again",
+        type: "confirm",
+        message: "do you want to analyze another Channel?",
+        default: false,
+    });
+
+    if (againResponse.again) {
+        await channelPrompt();
+    } else {
+        process.exit(0);
+    }
 };
 
 await intro();
 await tokenPrompt();
 await channelPrompt();
-
-const spinner = createSpinner("Preparing...").start();
-const messages = await fetchAllMessages(token, channelid, spinner);
-const channel = await fetchChannel(token, channelid);
-const data = {};
-data.messages = messages;
-data.messageCount = messages.length;
-data.channel = channel;
-await printData(data);

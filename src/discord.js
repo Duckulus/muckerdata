@@ -16,7 +16,7 @@ const fetchMessages = async (token, channelid, limit = 50, before = null) => {
     return resp.data;
 };
 
-export const fetchAllMessages = async (token, channelid, spinner) => {
+export const fetchAllMessages = async (token, channelid, spinner, limit = -1) => {
     let messages = [];
     while (true) {
         const fetched = await fetchMessages(token, channelid, 100, messages[messages.length - 1] ? messages[messages.length - 1].id : null);
@@ -25,6 +25,11 @@ export const fetchAllMessages = async (token, channelid, spinner) => {
             spinner.update({
                 text: `Fetching Messages... (${messages.length}) This may take a while`,
             });
+
+            if (!(limit < 1) && messages.length >= limit) {
+                spinner.stop();
+                return messages;
+            }
         } else {
             spinner.stop();
             return messages;

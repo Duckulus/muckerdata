@@ -36,7 +36,7 @@ export const printData = async (data) => {
         }
         if (message.author.username && message.content) {
             messages[message.author.username] = (messages[message.author.username] || 0) + 1;
-            const content = message.content;
+            const content = message.content.toLowerCase();
             for (const word of content.split(" ")) {
                 if (word != "") {
                     words[word] = (words[word] || 0) + 1;
@@ -56,14 +56,16 @@ export const printData = async (data) => {
     console.log(chalk.blue("------------"));
     console.log(chalk.gray("Group Name: ") + data.channel.name);
     console.log(chalk.gray("ID: ") + data.channel.id);
-    console.log(chalk.gray("Members: ") + (data.channel.recipients.length + 1));
+    if (data.channel.recipients) {
+        console.log(chalk.gray("Members: ") + (data.channel.recipients.length + 1));
+    }
     console.log(chalk.gray("Individuals who were ever part of the group: ") + users.length);
     console.log(chalk.gray("\nAdded: ") + add);
     console.log(chalk.gray("Removed: ") + remove);
     console.log(chalk.blue("\nMessages:"));
     console.log(chalk.blue("------------"));
     console.log(chalk.gray("Total: ") + total);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         const author = sortedMessages[i];
         if (author) {
             console.log(`${chalk.yellowBright(i + 1)}. ${author[0]}: ${author[1]} (${Math.ceil((author[1] / total) * 100)}%)`);
@@ -75,7 +77,7 @@ export const printData = async (data) => {
     console.log(chalk.gray("Total duration of all voice calls: ") + msToHMS(callDuration));
     console.log(chalk.blue("\nMost calls started by:"));
     console.log(chalk.blue("------------"));
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         const author = sortedCall[i];
         if (author) {
             console.log(`${chalk.yellowBright(i + 1)}. ${author[0]}: ${author[1]} (${Math.ceil((author[1] / total) * 100)}%)`);
