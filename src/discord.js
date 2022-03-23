@@ -47,18 +47,18 @@ export const fetchChannel = async (token, channelid) => {
     return resp.data;
 };
 
-// export const fetchGroups = async (token) => {
-//     let url = baseUrl + `users/@me/channels`;
-//     const resp = await axios.get(url, {
-//         headers: {
-//             authorization: token,
-//         },
-//     });
-//     const groups = [];
-//     for (const channel of resp.data) {
-//         if (channel.type == 3) {
-//             groups.push == channel;
-//         }
-//     }
-//     return groups;
-// };
+export const fetchGroups = async (token) => {
+    let url = baseUrl + `users/@me/channels`;
+    const resp = await axios.get(url, {
+        headers: {
+            authorization: token,
+        },
+    });
+    const groups = [];
+    for (const channel of resp.data) {
+        if (channel.type == 3) {
+            groups.push == channel;
+        }
+    }
+    return groups;
+};

@@ -109,6 +109,24 @@ const limitPromp = async () => {
     data.channel = channel;
     data.messages = messages;
     await printData(data);
+    await exportPrompt(data);
+};
+
+const exportPrompt = async (data) => {
+    const exportResponse = await inquirer.prompt({
+        name: "export",
+        type: "confirm",
+        message: "Would you like to export the generated data?",
+        default: false,
+    });
+
+    if (exportResponse.export) {
+        const url = "https://www.toptal.com/developers/hastebin/";
+        const resp = await axios.post(url + "documents", {
+            data: JSON.stringify(data, null, 3),
+        });
+        console.log(chalk.blue(`The raw data has been dumped @ ${url + resp.data.key} !`));
+    }
     await againPromt();
 };
 
@@ -116,7 +134,7 @@ const againPromt = async () => {
     const againResponse = await inquirer.prompt({
         name: "again",
         type: "confirm",
-        message: "do you want to analyze another Channel?",
+        message: "Do you want to analyze another Channel?",
         default: false,
     });
 
