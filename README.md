@@ -1,4 +1,4 @@
-# MuckerData
+# Muckerdata
 
 ## Information
 
@@ -6,4 +6,4 @@ This utility allows you to generate some interesting data about your Discord gro
 
 ## How to Use  
 
-To use this program just run `npx muckerdata@latest` in your terminal to get the latest version from the npm package registry. You need to have NodeJS installed.
+To use this program just run `npx discord-group-analyzer@latest` in your terminal to get the latest version from the npm package registry. You need to have NodeJS installed.
