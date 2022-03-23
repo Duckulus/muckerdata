@@ -121,19 +121,25 @@ const exportPrompt = async (data) => {
     });
 
     if (exportResponse.export) {
-        const spinner = createSpinner("Uploading to Hastebin...");
+        const spinner = createSpinner("Uploading to Hastebin...").start();
         const url = "https://www.toptal.com/developers/hastebin/";
-        const resp = await axios.post(
-            url + "documents",
-            {
-                data: JSON.stringify(data, null, 3),
-            },
-            {
-                maxBodyLength: Infinity,
-                maxContentLength: Infinity,
-            }
-        );
-        spinner.success(chalk.blue(`The raw data has been dumped @ ${url + resp.data.key} !`));
+        try {
+            const resp = await axios.post(
+                url + "documents",
+                {
+                    data: JSON.stringify(data, null, 3),
+                },
+                {
+                    maxBodyLength: Infinity,
+                    maxContentLength: Infinity,
+                }
+            );
+            spinner.success({ text: chalk.blue(`The raw data has been dumped @ ${url + resp.data.key} !`) });
+        } catch (e) {
+            spinner.error({
+                text: "An Error occured while uploading your data! Please try again later.",
+            });
+        }
     }
     await againPromt();
 };
