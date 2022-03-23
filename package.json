@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "type": "module",
+    "homepage": "https://github.com/duckulus/muckerdata",
     "scripts": {
         "start": "node src/index.js"
     },
