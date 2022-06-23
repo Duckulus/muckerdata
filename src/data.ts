@@ -93,6 +93,9 @@ export const printData = async (data: MuckerData) => {
   console.log(
     chalk.gray("Total duration of all voice calls: ") + msToHMS(callDuration)
   );
+  console.log(
+    chalk.gray("Average Call Duration: ") + msToHMS(callDuration / calls)
+  );
   console.log(chalk.blue("\nMost calls started by:"));
   console.log(chalk.blue("------------"));
   for (let i = 0; i < 10; i++) {
