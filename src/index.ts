@@ -7,6 +7,7 @@ import { createSpinner } from "nanospinner";
 import { MuckerData, printData } from "./data.js";
 import { fetchAllMessages, fetchChannel } from "./discord.js";
 import { sleep } from "./util.js";
+import * as fs from "fs";
 
 let token: string;
 let channelid: string;
@@ -133,32 +134,43 @@ const exportPrompt = async (data: MuckerData) => {
   });
 
   if (exportResponse.export) {
-    const spinner = createSpinner("Uploading to Hastebin...").start();
-    const url = "https://www.toptal.com/developers/hastebin/";
-    try {
-      const resp = await axios.post(
-        url + "documents",
-        {
-          data: JSON.stringify(data, null, 3),
-        },
-        {
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-        }
-      );
-      spinner.success({
-        text: chalk.blue(
-          `The raw data has been dumped @ ${url + resp.data.key} !`
-        ),
-      });
-    } catch (e) {
-      spinner.error({
-        text: "An Error occured while uploading your data! Please try again later.",
-      });
-    }
+   await pathPrompt(data)
   }
   await againPromt();
 };
+
+const pathPrompt = async (data: MuckerData) => {
+  const pathResponse = await inquirer.prompt({
+    name: "path",
+    type: "input",
+    message: "Enter the full path of the folder you want to export the data to (Example \"C:\\Users\\User\\Documents\")",
+    default: ""
+  })
+  const spinner = createSpinner("Saving...").start()
+  if(!pathResponse.path) {
+    spinner.error({
+      text: "You need to specify a path"
+    })
+    await exportPrompt(data)
+  }
+  try {
+    const path = pathResponse.path
+
+    const file = (path.endsWith("\\") ? path.slice(0, -1) : path)  + "\\muckerdata.json"
+    fs.writeFileSync(file, JSON.stringify(data, null, 4))
+    spinner.success({
+      text: `Data was saved succesfully in "${file}"`
+    })
+    await againPromt()
+  } catch (e) {
+    spinner.error({
+      text: "Error saving data. Make sure you entered a path to a proper folder."
+    })
+    await exportPrompt(data)
+  }
+
+
+}
 
 const againPromt = async () => {
   const againResponse = await inquirer.prompt({
