@@ -2,7 +2,11 @@
     "name": "discord-group-analyzer",
     "version": "0.1.2",
     "description": "",
-    "exports": "./index.js",
+    "main": "dist/index.js",
+    "files": [
+        "src",
+        "dist"
+    ],
     "type": "module",
     "homepage": "https://github.com/duckulus/muckerdata",
     "scripts": {
