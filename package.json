@@ -17,7 +17,7 @@
     },
     "keywords": [],
     "author": "Duckulus",
-    "bin": "./src/index.js",
+    "bin": "./dist/index.js",
     "license": "ISC",
     "dependencies": {
         "axios": "^0.26.1",
