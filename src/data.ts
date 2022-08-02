@@ -87,6 +87,7 @@ export const printData = async (data: MuckerData) => {
       );
     }
   }
+  console.log(chalk.gray("\nFirst message: ") + `https://discord.com/channels/@me/${data.channel.id}/${data.messages[data.messages.length-1].id}`);
   console.log(chalk.blue("\nVoice Calls:"));
   console.log(chalk.blue("------------"));
   console.log(chalk.gray("Total Number of voice calls: ") + calls);
